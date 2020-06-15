@@ -1,0 +1,9 @@
+/input
+/output
+/tmp
+/working
+/telegram_bot
+/payload/payload.bin
+/payload/old/*
+/payload/output/*
+.DS_Store
