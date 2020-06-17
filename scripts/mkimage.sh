@@ -91,6 +91,7 @@ sudo mkdir -p "$systemdir/persist"
 sudo mkdir -p "$systemdir/firmware"
 sudo mkdir -p "$systemdir/dsp"
 sudo mkdir -p "$systemdir/cache"
+sudo rm -rf "$systemdir/fsg"
 
 if [ "$5" == "--old" ]; then
     if [ "$outputtype" == "Aonly" ]; then
