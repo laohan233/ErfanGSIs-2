@@ -21,7 +21,8 @@ mkdir -p $1/product/overlay
 cp -fpr $thispath/nondevice_overlay/* $1/product/overlay/
 
 if [ -f $romdir/NODEVICEOVERLAY ]; then
-    echo "Using device specific overlays is not supported in this rom. Skipping..."
+    echo "-> Using device specific overlays is not supported in this rom."
+    echo " - Skipping..."
 else
     cp -fpr $thispath/overlay/* $1/product/overlay/
 fi

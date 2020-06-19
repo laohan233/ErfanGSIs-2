@@ -36,7 +36,7 @@ fi
 
 SRC_DIR=$1
 if [ ! -d $SRC_DIR ]; then
-  echo "Can not find directory $SRC_DIR!"
+  echo "-> Can not find directory $SRC_DIR!"
   exit 2
 fi
 
@@ -147,11 +147,11 @@ fi
 case $EXT_VARIANT in
   ext2) ;;
   ext4) ;;
-  *) echo "Only ext2/4 are supported!"; exit 3 ;;
+  *) echo "-> Only ext2/4 are supported!"; exit 3 ;;
 esac
 
 if [ -z $MOUNT_POINT ]; then
-  echo "Mount point is required"
+  echo "-> Mount point is required."
   exit 2
 fi
 
@@ -160,7 +160,7 @@ if [[ ${MOUNT_POINT:0:1} != "/" ]]; then
 fi
 
 if [ -z $SIZE ]; then
-  echo "Need size of filesystem"
+  echo "-> Need size of filesystem"
   exit 2
 fi
 

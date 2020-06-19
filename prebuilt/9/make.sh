@@ -17,7 +17,8 @@ mkdir -p $1/product/overlay
 cp -fpr $thispath/nondevice_overlay/* $1/product/overlay/
 
 if [ -f $romdir/NODEVICEOVERLAY ]; then
-    echo "Using device specific overlays is not supported in this rom. Skipping..."
+    echo "-> Using device specific overlays is not supported in this rom."
+    echo " - Skipping..."
 else
     cp -fpr $thispath/overlay/* $1/product/overlay/
 fi
@@ -25,8 +26,9 @@ fi
 ## Brightness fix
 # Some systems are using custom light services, don't apply this patch on those roms
 if [ -f $romdir/DONTPATCHLIGHT ]; then
-    echo "Patching lights for brightness fix is not supported in this rom. Skipping..."
+    echo "-> Patching lights for brightness fix is not supported in this rom."
+    echo " - Skipping..."
 else
-    echo "Start Patching Light Services for Brightness Fix..."
+    echo "-> Start Patching: Light Services for Brightness Fix..."
     $thispath/brightnessfix/make.sh "$systempath"
 fi

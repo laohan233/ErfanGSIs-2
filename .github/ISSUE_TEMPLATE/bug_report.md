@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: "<Android version> <Device code name> [Bug name Ex. Bootloop on animation]"
+title: "<Android version> <Device code name> [Bug name Ex. Bootloop on animation] [Issue severity: Ex. High]"
 labels: ''
 assignees: ''
 
