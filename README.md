@@ -16,7 +16,7 @@ Telegram channel: https://t.me/yuvendors
 
 ### Download tools
 ```
-git clone --recurse-submodules https://github.com/yukosky/ErfanGSIs.git
+git clone https://github.com/yukosky/ErfanGSIs.git
 cd ErfanGSIs
 ```
 

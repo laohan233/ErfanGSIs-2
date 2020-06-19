@@ -1,84 +1,63 @@
 #!/bin/bash
-#!/I got this script from https://sourceforge.net/projects/helios-gsis/, all credits for him! Good work and good usage. (modded, and broken, wait for my fix)
 
-#Variables
-
-PARTITIONS=("system" "product" "opproduct")
-payload_extractor="payload/payload_dumper.py"
 LOCALDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-outdir="$LOCALDIR/cache"
-tmpdir="$outdir/tmp"
-#############################################################
+cachedir="$LOCALDIR/cache"
+tmpdir="$cachedir/tmp"
+payload_extractor="tools/update_payload_extractor/extract.py"
+PARTITIONS=("system" "product" "opproduct")
 
-usage() {
-    echo "Usage: $0 <Firmware Type> [Path to Firmware]"
-    echo -e "\tFirmware Type! = OxygenOS or Pixel"
-    echo -e "\tPath to Firmware!"
+merge_partition () {
+    echo "Merging $1 Partition"
+    mkdir $cachedir/$1
+    mount -o ro $cachedir/$1.img $cachedir/$1/
+    cp -pvr $cachedir/$1/* $cachedir/system-new/$2 &> /dev/null
+    umount $cachedir/$1
+    rm -rf $cachedir/$1
 }
 
-if [ "$1" == "" ]; then
-    echo "Enter all needed parameters"
-    usage
-    exit 1
-fi
-
-echo "Create Temp and out dir"
-	mkdir -p "$tmpdir"
-	mkdir -p "$outdir"
-
+#Extract OTA
+mkdir -p "$tmpdir" "$cachedir"
 unzip $2 -d $tmpdir &> /dev/null
 echo "Extracting Required Partitions . . . . "
 if [ $1 = "OxygenOS" ]; then
-		for partition in ${PARTITIONS[@]}; do
- 	   	    python3 $payload_extractor --partitions $partition --output_dir $tmpdir $tmpdir/payload.bin 
-		done
-	mv $tmpdir/system $outdir/system-old.img
-	mv $tmpdir/product $outdir/product.img
-	mv $tmpdir/opproduct $outdir/opproduct.img
+	for partition in ${PARTITIONS[@]}; do
+ 	    python $payload_extractor --partitions $partition --output_dir $tmpdir $tmpdir/payload.bin
+ 	    mv $tmpdir/$partition $cachedir/$partition.img 
+	done
 elif [ $1 = "Pixel" ]; then
 	unzip $tmpdir/*/*.zip -d $tmpdir &> /dev/null
-	simg2img $tmpdir/system.img $outdir/system-old.img
-	simg2img $tmpdir/product.img $outdir/product.img
+    simg2img $tmpdir/system.img $cachedir/system.img
+	simg2img $tmpdir/product.img $cachedir/product.img
+	simg2img $tmpdir/system_other.img $cachedir/system_other.img
+ 	if [ -f $tmpdir/system_ext.img ]; then
+	    simg2img $tmpdir/system_ext.img $cachedir/system_ext.img
+	fi
 fi
 rm -rf $tmpdir
+
+#Make Dummy Image
 echo "Creating Dummy System Image . . . . "
-dd if=/dev/zero of=$outdir/system.img bs=4k count=1048576
-mkfs.ext4 $outdir/system.img
-tune2fs -c0 -i0 $outdir/system.img
-echo "Mounting System Images . . . . "
-	mkdir system
-	mkdir system-old
-	mount -o loop $outdir/system.img system/
-	mount -o ro $outdir/system-old.img system-old/
-	echo "  "
-echo "Copying Files . . . . "
-	cp -v -r -p system-old/* system/ &> /dev/null
-	sync
-	umount system-old
-	rm $outdir/system-old.img
-	rm -rf system/product
-	ln -s system/product system/product
-    	rm -rf system/system/product
-    	mkdir system/system/product/
-echo "Merging product.img "
-	sudo mkdir $outdir/product
-	mount -o ro $outdir/product.img $outdir/product/
-	cp -v -r -p $outdir/product/* system/system/product/ &> /dev/null
-	sync
-	umount $outdir/product
-	rmdir $outdir/product/
-	rm $outdir/product.img
-if [ $1 = "OxygenOS" ]; then
-	echo "Merging opproduct.img "
-	sudo mkdir $outdir/opproduct
-	mount -o ro $outdir/opproduct.img $outdir/opproduct/
-	cp -v -r -p $outdir/opproduct/* system/oneplus/ &> /dev/null
-	sync
-	umount $outdir/opproduct
-	rmdir $outdir/opproduct/
-	rm $outdir/opproduct.img
+mkdir $cachedir/system-new
+mkfs.ext2 $cachedir/system-new.img 4800M &>/dev/null
+tune2fs -c0 -i0 $cachedir/system-new.img &>/dev/null
+mount -o loop $cachedir/system-new.img $cachedir/system-new
+
+#Merge
+merge_partition system
+rm -rf $cachedir/system-new/system/product
+mkdir $cachedir/system-new/system/product
+merge_partition product system/product
+rm -rf $cachedir/system-new/product
+ln -s /system/product/ $cachedir/system-new/product
+if [[ $1 = "OxygenOS" ]]; then
+    merge_partition opproduct oneplus
+elif [[ $1 = "Pixel" ]]; then
+    merge_partition system_other system
+    if [[ -f $tmpdir/system_ext.img ]]; then
+        rm -rf $cachedir/system-new/system/system_ext
+        mkdir $cachedir/system-new/system/system_ext
+        merge_partition product system/system_ext
+        rm -rf $cachedir/system-new/system_ext
+        ln -s /system/system_ext/ $cachedir/system-new/system_ext
+    fi
 fi
-echo "Finalising "
-	mkdir out
-	rm -rf system-old/
-echo "Please finish creating GSI using make.sh script"
