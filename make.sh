@@ -195,7 +195,7 @@ if [ "$outputtype" == "Aonly" ]; then
     fi
 fi
 
-date=`date +%Y%m%d`
+date=`date +%Y%m%d%H%M`
 outputname="$romtypename-$outputtype-$sourcever-$date-ErfanGSI-YuMiGSI"
 outputimagename="$outputname".img
 outputtextname="$outputname".txt
