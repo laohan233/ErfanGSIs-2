@@ -141,7 +141,7 @@ fi
 UMOUNT "$PROJECT_DIR/working/system"
 rm -rf "$PROJECT_DIR/working"
 
-echo "Porting ${SRCTYPENAME} GSI done on: $PROJECT_DIR/output"
+echo "-> Porting ${SRCTYPENAME} GSI done on: $PROJECT_DIR/output"
 
 if [[ -f "$PROJECT_DIR/private_utils.sh" ]]; then
     . "$PROJECT_DIR/private_utils.sh"

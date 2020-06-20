@@ -6,4 +6,5 @@
 /payload/payload.bin
 /payload/old/*
 /payload/output/*
+/cache/
 .DS_Store
