@@ -242,7 +242,7 @@ if [ "$sourcever" == "9" ]; then
     useold="--old"
 fi
 $scriptsdir/mkimage.sh $systemdir $outputtype $systemsize $output $useold > $tempdir/mkimage.log
-echo "-> Created image ($outputtype): $outputimagename | Size: $systemsize"
+echo "-> Created image ($outputtype): $outputimagename | Size: $(bytesToHuman $systemsize)"
 
 echo "-> Remove Temp dir"
 rm -rf "$tempdir"
