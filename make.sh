@@ -120,9 +120,9 @@ fi
 echo "-> Setting the Android version of GSI"
 if [ -t "$verRunner" ]; then
     rm -rf cache/
-    mkdir cache; cd cache; touch ver; echo "$sourcever" >> ver; export sourcever2=`cat ver`; cd ../
+    mkdir cache; cd cache; touch ver; echo "$sourcever" >> ver; export sourcever2=`cat ver`; mv ver ../ver; cd ../
 else
-    mkdir cache; cd cache; touch ver; echo "$sourcever" >> ver; export sourcever2=`cat ver`; cd ../
+    mkdir cache; cd cache; touch ver; echo "$sourcever" >> ver; export sourcever2=`cat ver`; mv ver ../ver; cd ../
 fi
 
 if [ $(echo $sourcever | cut -d "." -f 2) == 0 ]; then
