@@ -112,14 +112,14 @@ fi
 # Detect Source API level
 if grep -q ro.build.version.release_or_codename $systemdir/system/build.prop; then
     sourcever=`grep ro.build.version.release_or_codename $systemdir/system/build.prop | cut -d "=" -f 2`
+    mkdir cache; cd cache; touch ver; echo "$sourcever" >> ver; export sourcever2=`cat ver`; cd ../
 else
     sourcever=`grep ro.build.version.release $systemdir/system/build.prop | cut -d "=" -f 2`
+    mkdir cache; cd cache; touch ver; echo "$sourcever" >> ver; export sourcever2=`cat ver`; cd ../
 fi
 if [ $(echo $sourcever | cut -d "." -f 2) == 0 ]; then
     sourcever=$(echo $sourcever | cut -d "." -f 1)
 fi
-
-. runner/getinfo.sh
 
 flag=false
 case "$sourcever" in
