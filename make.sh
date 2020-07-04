@@ -112,12 +112,17 @@ fi
 # Detect Source API level
 if grep -q ro.build.version.release_or_codename $systemdir/system/build.prop; then
     sourcever=`grep ro.build.version.release_or_codename $systemdir/system/build.prop | cut -d "=" -f 2`
+    export sourcever2=`grep ro.build.version.release_or_codename $systemdir/system/build.prop | cut -d "=" -f 2`
 else
     sourcever=`grep ro.build.version.release $systemdir/system/build.prop | cut -d "=" -f 2`
+    export sourcever2=`grep ro.build.version.release $systemdir/system/build.prop | cut -d "=" -f 2`
 fi
 if [ $(echo $sourcever | cut -d "." -f 2) == 0 ]; then
     sourcever=$(echo $sourcever | cut -d "." -f 1)
 fi
+
+. runner/getinfo.sh
+
 flag=false
 case "$sourcever" in
     *"9"*) flag=true ;;
@@ -243,8 +248,6 @@ if [ "$sourcever" == "9" ]; then
 fi
 $scriptsdir/mkimage.sh $systemdir $outputtype $systemsize $output $useold > $tempdir/mkimage.log
 echo "-> Created image ($outputtype): $outputimagename | Size: $(bytesToHuman $systemsize)"
-
-. runner/getinfo.sh
 
 echo "-> Remove Temp dir"
 rm -rf "$tempdir"
