@@ -256,4 +256,4 @@ $scriptsdir/mkimage.sh $systemdir $outputtype $systemsize $output $useold > $tem
 echo "-> Created image ($outputtype): $outputimagename | Size: $(bytesToHuman $systemsize)"
 
 echo "-> Removing Tmp/Cache dir"
-rm -rf "$tempdir"
+rm -rf "$tempdir" "$verRunner"
