@@ -112,10 +112,8 @@ fi
 # Detect Source API level
 if grep -q ro.build.version.release_or_codename $systemdir/system/build.prop; then
     sourcever=`grep ro.build.version.release_or_codename $systemdir/system/build.prop | cut -d "=" -f 2`
-    export sourcever2=`grep ro.build.version.release_or_codename $systemdir/system/build.prop | cut -d "=" -f 2`
 else
     sourcever=`grep ro.build.version.release $systemdir/system/build.prop | cut -d "=" -f 2`
-    export sourcever2=`grep ro.build.version.release $systemdir/system/build.prop | cut -d "=" -f 2`
 fi
 if [ $(echo $sourcever | cut -d "." -f 2) == 0 ]; then
     sourcever=$(echo $sourcever | cut -d "." -f 1)
