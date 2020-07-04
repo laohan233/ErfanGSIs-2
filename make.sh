@@ -244,5 +244,7 @@ fi
 $scriptsdir/mkimage.sh $systemdir $outputtype $systemsize $output $useold > $tempdir/mkimage.log
 echo "-> Created image ($outputtype): $outputimagename | Size: $(bytesToHuman $systemsize)"
 
+. runner/getinfo.sh
+
 echo "-> Remove Temp dir"
 rm -rf "$tempdir"
