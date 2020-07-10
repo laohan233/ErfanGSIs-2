@@ -233,7 +233,7 @@ elif [[ $(7z l -ba $romzip | grep payload.bin) ]]; then
     sudo rm -rf /working/system/fsg/
     7z e -y $romzip payload.bin 2>/dev/null >> $tmpdir/zip.log
     for partition in $PARTITIONS; do
-        python3 $payload_extractor payload.bin > $tmpdir/extract.log
+        python3 payload/payload_dumper.py payload.bin > $tmpdir/extract.log
         if [[ -f "payload/out/system.img" ]]; then
             mv "payload/out/system.img" "$outdir/$partition.img"
         fi
