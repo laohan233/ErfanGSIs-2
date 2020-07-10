@@ -56,7 +56,7 @@ toolsdir="$LOCALDIR/tools"
 simg2img="$toolsdir/$HOST/bin/simg2img"
 packsparseimg="$toolsdir/$HOST/bin/packsparseimg"
 unsin="$toolsdir/$HOST/bin/unsin"
-payload_extractor="payload/payload_dumper.py"
+payload_extractor="$toolsdir/update_payload_extractor/extract.py"
 sdat2img="$toolsdir/sdat2img.py"
 ozipdecrypt="$toolsdir/oppo_ozip_decrypt/ozipdecrypt.py"
 brotli_exec="$toolsdir/$HOST/bin/brotli"
@@ -254,7 +254,7 @@ elif [[ $(7z l -ba $romzip | grep payload.bin) ]]; then
     sudo rm -rf /working/system/fsg/
     7z e -y $romzip payload.bin 2>/dev/null >> $tmpdir/zip.log
     for partition in $PARTITIONS; do
-        python3 $payload_extractor payload.bin > $tmpdir/extract.log
+        python $payload_extractor payload.bin --partitions $partition --output_dir $tmpdir > $tmpdir/extract.log
         if [[ -f "payload/out/system.img" ]]; then
             mv "payload/out/system.img" "$outdir/$partition.img"
         fi
