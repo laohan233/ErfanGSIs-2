@@ -255,8 +255,8 @@ elif [[ $(7z l -ba $romzip | grep payload.bin) ]]; then
     7z e -y $romzip payload.bin 2>/dev/null >> $tmpdir/zip.log
     for partition in $PARTITIONS; do
         python $payload_extractor payload.bin --partitions $partition --output_dir $tmpdir > $tmpdir/extract.log
-        if [[ -f "payload/out/system.img" ]]; then
-            mv "payload/out/system.img" "$outdir/$partition.img"
+        if [[ -f "$tmpdir/$partition" ]]; then
+            mv "$tmpdir/$partition" "$outdir/$partition.img"
         fi
     done
     rm payload.bin
