@@ -54,7 +54,7 @@ sed -i "/debug.sf.latch_unsignaled/d" $1/build.prop
 echo "sys.use_fifo_ui=1" >> $1/build.prop
 echo "debug.sf.latch_unsignaled=1" >> $1/build.prop
 # Dalvik fix
-echo "# Dalvik fix"
+echo "# Dalvik fix" >> $1/build.prop
 sed -i "/ro.sys.fw.dex2oat_thread_count/d" $1/build.prop
 sed -i "/dalvik.vm.boot-dex2oat-threads/d" $1/build.prop
 sed -i "/dalvik.vm.dex2oat-threads/d" $1/build.prop
