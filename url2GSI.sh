@@ -104,10 +104,11 @@ LEAVE()
 
 echo " "
 echo " "
-echo "******************************"
-echo "   ErfanGSI - Yuko's Runner  *"
-echo "      USE FOR GITHUB         *"
-echo "******************************"
+echo "*******************************"
+echo "*   ErfanGSI - Yuko's Runner  *"
+echo "*       USE FOR GITHUB        *"
+echo "*          @yukosky           *"
+echo "*******************************"
 echo " "
 echo " "
 
