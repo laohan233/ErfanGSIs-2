@@ -23,6 +23,7 @@ LOCALDIR=`cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd`
 sourcepath=$1
 romtype=$2
 outputtype=$3
+verRunner=cache/
 
 if [[ $romtype == *":"* ]]; then
     romtypename=`echo "$romtype" | cut -d ":" -f 2`
@@ -114,6 +115,14 @@ if grep -q ro.build.version.release_or_codename $systemdir/system/build.prop; th
     sourcever=`grep ro.build.version.release_or_codename $systemdir/system/build.prop | cut -d "=" -f 2`
 else
     sourcever=`grep ro.build.version.release $systemdir/system/build.prop | cut -d "=" -f 2`
+fi
+
+echo "-> Setting the Android version of GSI"
+if [ -t "$verRunner" ]; then
+    rm -rf cache/
+    mkdir cache; cd cache; touch ver; echo "$sourcever" >> ver; export sourcever2=`cat ver`; mv ver ../ver; cd ../
+else
+    mkdir cache; cd cache; touch ver; echo "$sourcever" >> ver; export sourcever2=`cat ver`; mv ver ../ver; cd ../
 fi
 
 if [ $(echo $sourcever | cut -d "." -f 2) == 0 ]; then
@@ -247,4 +256,4 @@ $scriptsdir/mkimage.sh $systemdir $outputtype $systemsize $output $useold > $tem
 echo "-> Created image ($outputtype): $outputimagename | Size: $(bytesToHuman $systemsize)"
 
 echo "-> Removing Tmp/Cache dir"
-rm -rf "$tempdir"
+rm -rf "$tempdir" "$verRunner"
