@@ -115,9 +115,11 @@ if grep -q ro.build.version.release_or_codename $systemdir/system/build.prop; th
 else
     sourcever=`grep ro.build.version.release $systemdir/system/build.prop | cut -d "=" -f 2`
 fi
+
 if [ $(echo $sourcever | cut -d "." -f 2) == 0 ]; then
     sourcever=$(echo $sourcever | cut -d "." -f 1)
 fi
+
 flag=false
 case "$sourcever" in
     *"9"*) flag=true ;;
@@ -244,5 +246,5 @@ fi
 $scriptsdir/mkimage.sh $systemdir $outputtype $systemsize $output $useold > $tempdir/mkimage.log
 echo "-> Created image ($outputtype): $outputimagename | Size: $(bytesToHuman $systemsize)"
 
-echo "-> Remove Temp dir"
+echo "-> Removing Tmp/Cache dir"
 rm -rf "$tempdir"

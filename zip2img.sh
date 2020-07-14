@@ -14,17 +14,41 @@
 # KDDI .bin
 
 usage() {
-    echo "Usage: $0 <Path to firmware> [Output Dir]"
+    echo "Usage: [--vendor|-v] $0 <Path to firmware> [Output Dir]"
     echo -e "\tPath to firmware: the zip!"
     echo -e "\tOutput Dir: the output dir!"
+     echo -e "\t--vendor: Get only vendor.img"
 }
 
 if [ "$1" == "" ]; then
     echo "-> Bruh..."
-    echo " -Enter all needed parameters"
+    echo " - Enter all needed parameters"
     usage
     exit 1
 fi
+
+PARTITIONS="system"
+EXT4PARTITIONS="system"
+OTHERPARTITIONS=""
+
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    --vendor|-v)
+    PARTITIONS="vendor"
+    EXT4PARTITIONS="vendor"
+    shift
+    ;;
+    *)
+    POSITIONAL+=("$1")
+    shift
+    ;;
+esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters @ d31b82e
 
 LOCALDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 HOST="$(uname)"
@@ -38,9 +62,6 @@ ozipdecrypt="$toolsdir/oppo_ozip_decrypt/ozipdecrypt.py"
 brotli_exec="$toolsdir/$HOST/bin/brotli"
 
 romzip="$(realpath $1)"
-PARTITIONS="system"
-EXT4PARTITIONS="system"
-OTHERPARTITIONS=""
 
 echo "-> Create Temp and out dir"
 outdir="$LOCALDIR/cache"
@@ -62,8 +83,8 @@ if [[ $MAGIC == "OPPOENCRYPT!" ]]; then
     exit
 fi
 
-if [[ ! $(7z l -ba $romzip | grep ".*system.ext4.tar.*\|.*.tar\|.*chunk\|system\/build.prop\|system.new.dat\|system_new.img\|system.img\|payload.bin\|image.*.zip\|update.zip\|.*rawprogram*\|system.sin\|system-p" | grep -v ".*chunk.*\.so$") ]]; then
-    echo "BRUH: This type of firmwares not supported"
+if [[ ! $(7z l -ba $romzip | grep ".*$PARTITIONS.ext4.tar.*\|.*.tar\|.*chunk\|$PARTITIONS\/build.prop\|$PARTITIONS.new.dat\|$PARTITIONS_new.img\|$PARTITIONS.img\|payload.bin\|image.*.zip\|update.zip\|.*rawprogram*\|$PARTITIONS.sin\|$PARTITIONS-p" | grep -v ".*chunk.*\.so$") ]]; then
+    echo "-> BRUH: This type of firmwares not supported"
     cd "$LOCALDIR"
     rm -rf "$tmpdir" "$outdir"
     exit 1
@@ -90,7 +111,7 @@ for otherpartition in $OTHERPARTITIONS; do
 done
 sudo rm -rf /working/system/fsg/
 
-if [[ $(7z l -ba $romzip | grep system.new.dat) ]]; then
+if [[ $(7z l -ba $romzip | grep $PARTITIONS.new.dat) ]]; then
     echo "-> Aonly OTA detected"
     for partition in $PARTITIONS; do
         7z e -y $romzip $partition.new.dat* $partition.transfer.list $partition.img 2>/dev/null >> $tmpdir/zip.log
@@ -135,7 +156,7 @@ elif [[ $(7z l -ba $romzip | grep chunk | grep -v ".*\.so$") ]]; then
             fi
         fi
     done
-elif [[ $(7z l -ba $romzip | grep "system.sin") ]]; then
+elif [[ $(7z l -ba $romzip | grep "$PARTITIONS.sin") ]]; then
     echo "-> Sin type detected"
     cd $tmpdir
     for partition in $PARTITIONS; do
@@ -147,7 +168,7 @@ elif [[ $(7z l -ba $romzip | grep "system.sin") ]]; then
     for file in $ext4_list; do
         mv $tmpdir/$file $(echo "$outdir/$file" | sed -r 's|ext4|img|g')
     done
-elif [[ $(7z l -ba $romzip | grep "system-p") ]]; then
+elif [[ $(7z l -ba $romzip | grep "$PARTITIONS-p") ]]; then
     echo "-> P suffix images detected"
     for partition in $PARTITIONS; do
         foundpartitions=$(7z l -ba $romzip | rev | gawk '{ print $1 }' | rev | grep $partition-p)
@@ -156,7 +177,7 @@ elif [[ $(7z l -ba $romzip | grep "system-p") ]]; then
             mv $(ls $partition-p*) "$partition.img"
         fi
     done
-elif [[ $(7z l -ba $romzip | grep "system_new.img\|system.img") ]]; then
+elif [[ $(7z l -ba $romzip | grep "$PARTITIONS_new.img\|$PARTITIONS.img") ]]; then
     echo "-> Image detected"
     for partition in $PARTITIONS; do
         foundpartitions=$(7z l -ba $romzip | rev | gawk '{ print $1 }' | rev | grep $partition.img)
@@ -200,7 +221,7 @@ elif [[ $(7z l -ba $romzip | grep tar.md5 | rev | gawk '{ print $1 }' | rev | gr
             done
         done
     done
-    if [[ -f system.img ]]; then
+    if [[ -f $PARTITIONS.img ]]; then
         rm -rf $mainmd5
         rm -rf $cscmd5
     else
