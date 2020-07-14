@@ -102,16 +102,6 @@ LEAVE()
     exit 1
 }
 
-echo " "
-echo " "
-echo "*******************************"
-echo "*   ErfanGSI - Yuko's Runner  *"
-echo "*       USE FOR GITHUB        *"
-echo "*          @yukosky           *"
-echo "*******************************"
-echo " "
-echo " "
-
 echo "-> Updating tools..."
 "$PROJECT_DIR"/update.sh
 
