@@ -43,11 +43,6 @@ sed -i "/ro.setupwizard.mode/d" $1/build.prop
 sed -i "/ro.setupwizard.mode/d" $1/product/build.prop
 echo "ro.setupwizard.mode=DISABLED" >> $1/etc/prop.default
 echo "ro.setupwizard.mode=DISABLED" >> $1/product/build.prop
-# Mod security patch (newbie test)
-sed -i "/ro.build.version.security_patch/d" $1/etc/prop.default
-sed -i "/ro.build.version.security_patch/d" $1/build.prop
-echo "ro.build.version.security_patch=2020-07-05" >> $1/build.prop
-echo "ro.build.version.security_patch=2020-07-05" >> $1/etc/prop.default
 # Some adding in build.prop
 sed -i "/sys.use_fifo_ui/d" $1/build.prop
 sed -i "/debug.sf.latch_unsignaled/d" $1/build.prop
