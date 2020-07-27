@@ -11,9 +11,6 @@ rm -rf $1/priv-app/CNEService
 rm -rf $1/priv-app/DMService
 rm -rf $1/priv-app/VzwOmaTrigger
 rm -rf $1/priv-app/qcrilmsgtunnel
-
-# SUPER DEBLOAT
-
 rm -rf $1/product/app/CalculatorGooglePrebuilt
 rm -rf $1/product/app/CalendarGooglePrebuilt
 rm -rf $1/product/app/Camera2
