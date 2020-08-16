@@ -4,8 +4,8 @@
 # All credits to Erfan Abdi
 
 # NUKE THE SOURCEFORGE'S LINE IF U DONT WANT THAT
-USER=pything
-SFDIR=/home/pfs/project/yumi-project/dump
+USER=
+SFDIR=
 # SET UR PASSWORD
 PASSWORD=
 
@@ -81,7 +81,6 @@ toolsdir="$LOCALDIR/tools"
 romsdir="$LOCALDIR/roms"
 prebuiltdir="$LOCALDIR/prebuilt"
 scriptsdir="$LOCALDIR/scripts"
-transfer="$LOCALDIR/scripts/transfer"
 
 echo "-> Creating Temp directory..."
 rm -rf $tempdir
@@ -263,26 +262,26 @@ spawn sftp $USER@frs.sourceforge.net
 expect \"Password\"
 send \"$PASSWORD\r\"
 expect \"sftp> \"
-send \"$SFDIR\r\"
+send \"cd $SFDIR\r\"
 set timeout -1
 send \"put *Aonly*.zip\r\"
 expect \"Uploading\"
 expect \"100%\"
 expect \"sftp>\"
+send \"bye\r\"
 interact"
 expect -c "
 spawn sftp $USER@frs.sourceforge.net
-expect \"yes/no\"
-send \"yes\r\"
 expect \"Password\"
 send \"$PASSWORD\r\"
 expect \"sftp> \"
-send \"$SFDIR\r\"
+send \"cd $SFDIR\r\"
 set timeout -1
 send \"put *AB*.zip\r\"
 expect \"Uploading\"
 expect \"100%\"
 expect \"sftp>\"
+send \"bye\r\"
 interact"
 fi
 
