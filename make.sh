@@ -3,6 +3,12 @@
 # Project OEM-GSI Porter by Erfan Abdi <erfangplus@gmail.com>
 # All credits to Erfan Abdi
 
+# NUKE THE SOURCEFORGE'S LINE IF U DONT WANT THAT
+USER=pything
+SFDIR=/home/pfs/project/yumi-project/dump
+# SET UR PASSWORD
+PASSWORD=
+
 usage()
 {
 echo "Usage: $0 <Path to GSI system> <Firmware type> <Output type> [Output Dir]"
@@ -75,6 +81,7 @@ toolsdir="$LOCALDIR/tools"
 romsdir="$LOCALDIR/roms"
 prebuiltdir="$LOCALDIR/prebuilt"
 scriptsdir="$LOCALDIR/scripts"
+transfer="$LOCALDIR/scripts/transfer"
 
 echo "-> Creating Temp directory..."
 rm -rf $tempdir
@@ -246,5 +253,39 @@ fi
 $scriptsdir/mkimage.sh $systemdir $outputtype $systemsize $output $useold > $tempdir/mkimage.log
 echo "-> Created image ($outputtype): $outputimagename | Size: $(bytesToHuman $systemsize)"
 
+echo "-> Zipping out: $romtypename-$outputtype-$sourcever-$date-ErfanGSI-YuMiGSI.img..."
+cd output
+zip -r $romtypename-$outputtype-$sourcever-$date-ErfanGSI-YuMiGSI.img.zip $romtypename-$outputtype-$sourcever-$date-ErfanGSI-YuMiGSI.img
+
+if [ "$outputtype" == "Aonly" ]; then
+expect -c "
+spawn sftp $USER@frs.sourceforge.net
+expect \"Password\"
+send \"$PASSWORD\r\"
+expect \"sftp> \"
+send \"$SFDIR\r\"
+set timeout -1
+send \"put *Aonly*.zip\r\"
+expect \"Uploading\"
+expect \"100%\"
+expect \"sftp>\"
+interact"
+expect -c "
+spawn sftp $USER@frs.sourceforge.net
+expect \"yes/no\"
+send \"yes\r\"
+expect \"Password\"
+send \"$PASSWORD\r\"
+expect \"sftp> \"
+send \"$SFDIR\r\"
+set timeout -1
+send \"put *AB*.zip\r\"
+expect \"Uploading\"
+expect \"100%\"
+expect \"sftp>\"
+interact"
+fi
+
 echo "-> Removing Tmp/Cache dir"
 rm -rf "$tempdir"
+
