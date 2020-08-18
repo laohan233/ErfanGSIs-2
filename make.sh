@@ -285,6 +285,11 @@ send \"bye\r\"
 interact"
 fi
 
+# Remove lock
+if [ "$outputtype" == "Aonly" ]; then
+     sudo rm -rf "$PROJECT_DIR/cache"
+fi
+
 echo "-> Removing Tmp/Cache dir"
 rm -rf "$tempdir"
 
