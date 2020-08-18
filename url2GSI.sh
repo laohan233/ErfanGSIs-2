@@ -16,6 +16,14 @@ if [ -f "$LOCK" ]; then
 else
     mkdir "$PROJECT_DIR/cache/"
     touch "$LOCK"
+    echo "-> Making patch: Cleaning and removing folders that are used to make GSI to avoid problems"
+    if [ -d "$PROJECT_DIR/working/system/" ]; then
+        sudo umount "$PROJECT_DIR/working/system/"
+    fi
+    if [ -d "$PROJECT_DIR/tools/ROM_resigner/tmp/" ]; then
+        sudo rm -rf "$PROJECT_DIR/tools/ROM_resigner/tmp/"
+    fi
+    sudo rm -rf working tmp
 fi
 
 usage()
