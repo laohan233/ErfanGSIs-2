@@ -8,6 +8,15 @@ AB=true
 AONLY=true
 MOUNTED=false
 CLEAN=false
+LOCK="$PROJECT_DIR/cache/.lock"
+
+if [ -f "$LOCK" ]; then
+    echo "-> Stop, wait for the other job to finish before you can start another one."
+    exit 1
+else
+    mkdir "$PROJECT_DIR/cache/"
+    touch "$LOCK"
+fi
 
 usage()
 {
@@ -55,6 +64,7 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 if [[ ! -n $2 ]]; then
     echo "-> ERROR!"
     echo " - Enter all needed parameters"
+    sudo rm -rf "$PROJECT_DIR/cache/" "$LOCK"
     usage
     exit
 fi
