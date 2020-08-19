@@ -204,7 +204,7 @@ if [ "$outputtype" == "Aonly" ]; then
 fi
 
 date=`date +%Y%m%d%H%M`
-outputname="$romtypename-$outputtype-$sourcever-$date-ErfanGSI-YuMiGSI"
+outputname="$romtypename-$outputtype-$sourcever-$date-ErfanGSI-VelanGSI"
 outputimagename="$outputname".img
 outputtextname="$outputname".txt
 if [ "$4" == "" ]; then
@@ -251,39 +251,6 @@ if [ "$sourcever" == "9" ]; then
 fi
 $scriptsdir/mkimage.sh $systemdir $outputtype $systemsize $output $useold > $tempdir/mkimage.log
 echo "-> Created image ($outputtype): $outputimagename | Size: $(bytesToHuman $systemsize)"
-
-echo "-> Zipping out: $romtypename-$outputtype-$sourcever-$date-ErfanGSI-YuMiGSI.img..."
-cd output
-zip -r $romtypename-$outputtype-$sourcever-$date-ErfanGSI-YuMiGSI.img.zip $romtypename-$outputtype-$sourcever-$date-ErfanGSI-YuMiGSI.img
-
-if [ "$outputtype" == "Aonly" ]; then
-expect -c "
-spawn sftp $USER@frs.sourceforge.net
-expect \"Password\"
-send \"$PASSWORD\r\"
-expect \"sftp> \"
-send \"cd $SFDIR\r\"
-set timeout -1
-send \"put *Aonly*.zip\r\"
-expect \"Uploading\"
-expect \"100%\"
-expect \"sftp>\"
-send \"bye\r\"
-interact"
-expect -c "
-spawn sftp $USER@frs.sourceforge.net
-expect \"Password\"
-send \"$PASSWORD\r\"
-expect \"sftp> \"
-send \"cd $SFDIR\r\"
-set timeout -1
-send \"put *AB*.zip\r\"
-expect \"Uploading\"
-expect \"100%\"
-expect \"sftp>\"
-send \"bye\r\"
-interact"
-fi
 
 # Remove lock
 if [ "$outputtype" == "Aonly" ]; then

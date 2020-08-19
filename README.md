@@ -17,16 +17,11 @@ Telegram channel: https://t.me/yuvendors
 git clone https://github.com/yukosky/ErfanGSIs.git ErfanGSIs
 ```
 
-### Fix issues with ErfanGSIs
-```
-sudo chmod -R 0777 ErfanGSIs
-```
-
 ### For setting up requirements
-    bash setup.sh
+    sudo bash setup.sh
 
 ### Generating GSI from Evolution X 4.5 of Raphael
-Example: For making OxygenOS of oneplus 7 pro firmware, you can use this command
+Example: For making Evolution X 4.5 from Redmi K20 Pro firmware, you can use this command
 ```
 ./url2GSI.sh https://cfhcable.dl.sourceforge.net/project/evolution-x//raphael/EvolutionX_4.5_raphael-10.0-20200713-0926-OFFICIAL.zip EvolutionX
 ```
