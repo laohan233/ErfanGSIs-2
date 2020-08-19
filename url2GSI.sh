@@ -23,7 +23,7 @@ else
     if [ -d "$PROJECT_DIR/tools/ROM_resigner/tmp/" ]; then
         sudo rm -rf "$PROJECT_DIR/tools/ROM_resigner/tmp/"
     fi
-    sudo rm -rf working tmp
+    sudo rm -rf "$PROJECT_DIR/cache/" "$PROJECT_DIR/tmp/" "$PROJECT_DIR/working/"
 fi
 
 usage()
