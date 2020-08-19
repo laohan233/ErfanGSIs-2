@@ -4,8 +4,8 @@
 
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
-TOKEN=1347601040:AAHZ6Olr4dwEgifnzjLUU1yPfv2lukAEnzQ
-CHAT_ID=-1001179583442
+TOKEN=
+CHAT_ID=
 BOTURL="https://api.telegram.org/bot$TOKEN/sendMessage"
 
 urlencode() {
